@@ -27,7 +27,35 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const db = client.db("gardenHub");
+    const gardenersCollection = db.collection("gardeners");
 
+    // get 6 active gardeners
+    app.get("/gardeners/active",async(req,res)=>{
+        try{
+            const result = await gardenersCollection
+            .find({status: "active"})
+            .limit(6)
+            .toArray();
+            res.send(result);
+
+        }
+        catch(error){
+            res.status(500).send({message:"Failed to fetch gardeners"});
+        }
+    });
+
+    // insert gardeners
+    app.post("/gardeners",async(req,res)=>{
+        try{
+            const data=req.body;
+            const result = await gardenersCollection.insertMany(data);
+            res.send(result);
+        }
+        catch(error){
+            res.status(500).send({message:"Failed to insert"})
+        }
+    })
 
 
     // Send a ping to confirm a successful connection
