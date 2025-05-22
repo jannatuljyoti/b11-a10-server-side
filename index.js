@@ -29,6 +29,9 @@ async function run() {
 
     const db = client.db("gardenHub");
     const gardenersCollection = db.collection("gardeners");
+    const tipsCollection = db.collection("tips");
+
+
 
     // get 6 active gardeners
     app.get("/gardeners/active",async(req,res)=>{
@@ -56,6 +59,36 @@ async function run() {
             res.status(500).send({message:"Failed to insert"})
         }
     })
+
+
+    // insert tips
+    app.post("/tips",async(req,res)=>{
+      try{
+        const tip=req.body;
+        const result =await tipsCollection.insertOne(tip);
+        res.send(result);
+
+      }catch(error){
+        res.status(500).send({message:"Failed insert tip"});
+      }
+    });
+
+
+    // get public tips
+    app.get("/tips/Public",async(req,res)=>{
+        try{
+            const tips = await tipsCollection
+            .find({
+availability: "Public"})
+            .limit(6)
+            .toArray();
+            res.send(tips);
+
+        }
+        catch(error){
+            res.status(500).send({message:"Failed to fetch top tips"});
+        }
+    });
 
 
     // Send a ping to confirm a successful connection
