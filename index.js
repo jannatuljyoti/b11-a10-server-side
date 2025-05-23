@@ -115,7 +115,7 @@ availability: "Public"})
     });
 
     // increase totalLiked
-    app.patch("tips/like/:id",async(req,res)=>{
+    app.patch("/tips/like/:id",async(req,res)=>{
       try{
         const id = req.params.id;
         const result =await tipsCollection.updateOne(
@@ -127,6 +127,30 @@ availability: "Public"})
       catch (error){
         res.status(500).send({message:"Failed update count"});
       }
+    });
+
+    // get user tips
+    app.get('/tips/user',async(req,res)=>{
+      const {email} = req.query;
+      const result = await tipsCollection.find({userEmail: email}).toArray();
+      res.send(result);
+    });
+
+
+    // delete
+    app.delete('/tips/:id',async(req,res)=>{
+      const result = await tipsCollection.deleteOne({_id: new ObjectId(req.params.id)});
+      res.send(result);
+    });
+
+    // update
+    app.put('/tips/:id',async(req,res)=>{
+      const update = req.body;
+      const result = await tipsCollection.updateOne(
+        {_id: new ObjectId(req.params.id)},
+        {$set: update}
+      );
+      res.send(result);
     });
 
 
