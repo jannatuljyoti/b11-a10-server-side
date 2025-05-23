@@ -114,6 +114,21 @@ availability: "Public"})
       }
     });
 
+    // increase totalLiked
+    app.patch("tips/like/:id",async(req,res)=>{
+      try{
+        const id = req.params.id;
+        const result =await tipsCollection.updateOne(
+          {_id: new ObjectId(id)},
+          {$inc: {totalLiked: 1}}
+        );
+        res.send(result);
+      }
+      catch (error){
+        res.status(500).send({message:"Failed update count"});
+      }
+    });
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
