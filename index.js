@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion,ObjectId } = require('mongodb');
 
 
 const app = express();
@@ -73,8 +73,7 @@ async function run() {
       }
     });
 
-
-    // get public tips
+    // get 6 public tips
     app.get("/tips/Public",async(req,res)=>{
         try{
             const tips = await tipsCollection
@@ -88,6 +87,19 @@ availability: "Public"})
         catch(error){
             res.status(500).send({message:"Failed to fetch top tips"});
         }
+    });
+
+    // get all public tips
+    app.get("/tips/public/all",async(req,res)=>{
+      try{
+        const tips = await tipsCollection
+        .find({availability: "Public"})
+        .toArray();
+        res.send(tips);
+      }
+      catch(error){
+        res.status(500).send({message:"Failed to fetch all tips"});
+      }
     });
 
 
