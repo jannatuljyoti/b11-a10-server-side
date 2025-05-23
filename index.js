@@ -102,6 +102,18 @@ availability: "Public"})
       }
     });
 
+    // Get a single tip by id
+    app.get("/tips/:id",async(req,res)=>{
+      try{
+        const id=req.params.id;
+        const tip=await tipsCollection.findOne({_id: new ObjectId(id)});
+        res.send(tip);
+      }
+      catch(error){
+        res.status(500).send({message: "Failed to fetch Details"});
+      }
+    });
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
