@@ -102,6 +102,13 @@ availability: "Public"})
       }
     });
 
+    // get user tips
+    app.get('/tips/user',async(req,res)=>{
+      const {email} = req.query;
+      const result = await tipsCollection.find({userEmail: email}).toArray();
+      res.send(result);
+    });
+
     // Get a single tip by id
     app.get("/tips/:id",async(req,res)=>{
       try{
@@ -129,12 +136,7 @@ availability: "Public"})
       }
     });
 
-    // get user tips
-    app.get('/tips/user',async(req,res)=>{
-      const {email} = req.query;
-      const result = await tipsCollection.find({userEmail: email}).toArray();
-      res.send(result);
-    });
+    
 
 
     // delete
