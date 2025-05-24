@@ -48,6 +48,18 @@ async function run() {
         }
     });
 
+
+    // get all gardeners
+
+    app.get("/gardeners",async(req,res)=>{
+      try{
+        const result=await gardenersCollection.find().toArray();
+        res.send(result);
+      }catch (error){
+        res.status(500).send({message:"Failed to fetch"})
+      }
+    });
+
     // insert gardeners
     app.post("/gardeners",async(req,res)=>{
         try{
@@ -152,6 +164,7 @@ availability: "Public"})
         {_id: new ObjectId(req.params.id)},
         {$set: update}
       );
+      console.log("Update result:",result)
       res.send(result);
     });
 
